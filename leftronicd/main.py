@@ -56,14 +56,15 @@ class Stream(object):
             log.msg("[Stream(%s).execute] Not idle, ignoring..." % self.name)
             return
         log.msg("[Stream(%s).execute] Calling %s(**%s)" % (self.name, self.method_path, self.kwargs))
-        self.callback(self.method(**self.kwargs))
         self.state = RUNNING
+        self.callback(self.method(**self.kwargs))
 
     def callback(self, value):
         log.msg("[Stream(%s).callback] Got value: %s" % (self.name, value))
         method = getattr(self.daemon.leftronic, 'push%s' % self.type.capitalize())
         method(self.name, value)
         self.state = IDLE
+        log.msg("[Stream(%s).callback] Back to idling..." % self.name)
 
 
 class LeftronicDaemon(object):
