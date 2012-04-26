@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from leftronic import Leftronic
 from leftronicd.constants import IDLE, RUNNING
-from leftronicd.helpers import get_interval, load
+from leftronicd.helpers import load
 from twisted.internet import task, reactor
 from twisted.python import log
 from twisted.web.client import getPage
-import json
+try:
+    import json
+except ImportError:
+    import simplejson as json
 import sys
 import yaml
 
@@ -38,7 +41,7 @@ class Stream(object):
     """
     def __init__(self, daemon, config):
         self.daemon = daemon
-        self.interval = get_interval(config.pop('interval'))
+        self.interval = int(config.pop('interval'))
         self.method_path = config.pop('method')
         self.method = load(self.method_path)
         self.name = config.pop('name')
@@ -57,7 +60,8 @@ class Stream(object):
             return
         log.msg("[Stream(%s).execute] Calling %s(**%s)" % (self.name, self.method_path, self.kwargs))
         self.state = RUNNING
-        self.callback(self.method(**self.kwargs))
+        deferred = self.method(**self.kwargs)
+        deferred.addCallback(self.callback)
 
     def callback(self, value):
         log.msg("[Stream(%s).callback] Got value: %s" % (self.name, value))

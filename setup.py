@@ -4,8 +4,17 @@ from leftronicd import __version__
 from setuptools import setup, find_packages
 
 
-with open('requirements.txt') as fobj:
-    INSTALL_REQUIRES = [line.strip() for line in fobj.readlines() if line.strip()]
+INSTALL_REQUIRES = [
+    'PyYAML==3.10',
+    'Twisted==12.0.0',
+    'certifi==0.0.8',
+    'chardet==1.0.1',
+    'leftronic==1.4',
+    'pyOpenSSL==0.13',
+    'requests==0.11.1',
+    'wsgiref==0.1.2',
+    'zope.interface==3.8.0',
+]
 
 try:
     import json
@@ -34,6 +43,7 @@ setup(
     packages=find_packages(),
     license='BSD',
     platforms=['OS Independent'],
+    include_package_data=True,
     install_requires=INSTALL_REQUIRES,
     entry_points="""
     [console_scripts]
