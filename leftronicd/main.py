@@ -66,7 +66,12 @@ class Stream(object):
     def callback(self, value):
         log.msg("[Stream(%s).callback] Got value: %s" % (self.name, value))
         method = getattr(self.daemon.leftronic, 'push%s' % self.type.capitalize())
-        method(self.name, value)
+        if isinstance(value, dict):
+            method(self.name, **value)
+        elif isinstance(value, tuple):
+            method(self.name, *value)
+        else:
+            method(self.name, value)
         self.state = IDLE
         log.msg("[Stream(%s).callback] Back to idling..." % self.name)
 
