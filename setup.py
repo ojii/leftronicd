@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 INSTALL_REQUIRES = [
     'PyYAML==3.10',
-    'Twisted==12.0.0',
+    'Twisted==19.7.0',
     'certifi==0.0.8',
     'chardet==1.0.1',
     'leftronic==1.4',
